@@ -43,10 +43,14 @@ namespace Catch {
 
         void writeSection(std::string const& className,
                           std::string const& rootName,
-                          SectionNode const& sectionNode);
+                          SectionNode const& sectionNode,
+                          TestCaseNode const& testCaseNode);
 
         void writeAssertions(SectionNode const& sectionNode);
         void writeAssertion(AssertionStats const& stats);
+
+        void virtual writeSectionProperties(SectionNode const& /*sectionNode*/,
+                                            TestCaseNode const& /*testCaseNode*/);
 
         XmlWriter xml;
         Timer suiteTimer;

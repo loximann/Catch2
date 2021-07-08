@@ -182,12 +182,17 @@ namespace Catch {
         if ( !m_config->name().empty() )
             className = m_config->name() + "." + className;
 
-        writeSection( className, "", rootSection );
+        writeSection( className, "", rootSection, testCaseNode );
+    }
+
+    void JunitReporter::writeSectionProperties(SectionNode const& /*sectionNode*/,
+                                               TestCaseNode const& /*testCaseNode*/) {
     }
 
     void JunitReporter::writeSection(  std::string const& className,
                         std::string const& rootName,
-                        SectionNode const& sectionNode ) {
+                        SectionNode const& sectionNode,
+                        TestCaseNode const& testCaseNode ) {
         std::string name = trim( sectionNode.stats.sectionInfo.name );
         if( !rootName.empty() )
             name = rootName + '/' + name;
@@ -217,12 +222,13 @@ namespace Catch {
                 xml.scopedElement( "system-out" ).writeText( trim( sectionNode.stdOut ), XmlFormatting::Newline );
             if( !sectionNode.stdErr.empty() )
                 xml.scopedElement( "system-err" ).writeText( trim( sectionNode.stdErr ), XmlFormatting::Newline );
+            writeSectionProperties(sectionNode, testCaseNode);
         }
         for( auto const& childNode : sectionNode.childSections )
             if( className.empty() )
-                writeSection( name, "", *childNode );
+                writeSection( name, "", *childNode, testCaseNode);
             else
-                writeSection( className, name, *childNode );
+                writeSection( className, name, *childNode, testCaseNode );
     }
 
     void JunitReporter::writeAssertions( SectionNode const& sectionNode ) {
